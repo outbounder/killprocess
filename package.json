@@ -1,7 +1,7 @@
 {
   "name": "killprocess",
-  "version": "0.0.1",
-  "description": "Terminate process and its childs using pkill(unix) or taskkill(win)",
+  "version": "0.0.2",
+  "description": "Terminate process and its childs using `ps-tree` and process.kill",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/outbounder/killprocess/issues"
   },
-  "homepage": "https://github.com/outbounder/killprocess"
+  "homepage": "https://github.com/outbounder/killprocess",
+  "dependencies": {
+    "ps-tree": "0.0.3"
+  },
+  "devDependencies": {}
 }

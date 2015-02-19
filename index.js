@@ -1,15 +1,26 @@
-var exec = require('child_process').exec;
-var isWindows = process.platform === 'win32';
+// borrowed from 
+// http://krasimirtsonev.com/blog/article/Nodejs-managing-child-processes-starting-stopping-exec-spawn
+var psTree = require('ps-tree')
 
-module.exports = function (pid, signal, next) {
-  if(typeof signal == "function") {
-    next = signal
-    signal = "SIGTERM"
-  }
-
-  if (isWindows) {
-    exec('taskkill /pid ' + pid + ' /T /F', next);
+module.exports = function(pid, signal, callback) {
+  signal   = signal || 'SIGKILL'
+  callback = callback || function () {}
+  var killTree = true
+  if(killTree) {
+    psTree(pid, function (err, children) {
+      [pid].concat(
+        children.map(function (p) {
+            return p.PID
+        })
+      ).forEach(function (tpid) {
+        try { process.kill(tpid, signal) }
+        catch (ex) { }
+      })
+      callback && callback()
+    })
   } else {
-    exec('pkill -TERM -P '+ pid, next)
+    try { process.kill(pid, signal) }
+    catch (ex) { }
+    callback && callback()
   }
 }
